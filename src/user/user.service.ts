@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import {JwtService} from '@nestjs/jwt';
 import { User } from './entities/user.entity';
 import {google} from 'googleapis'
 
@@ -11,17 +12,19 @@ const client = new OAuth2(process.env.CILENT_ID)
 @Injectable()
 export class UserService {
 
-  constructor( @InjectRepository(User) private userRepository: Repository<User>){
+  constructor(
+     @InjectRepository(User) private userRepository: Repository<User>,
+     private jwtService: JwtService
+  ){
 
   }
-  register(user: User) {
-    
-    return this.userRepository.save(user)
+  async register(user: User) {
+    return await this.userRepository.save(user)
   }
   async login(createUserDto: CreateUserDto) {
     const user=await this.userRepository.findOne({ email: createUserDto.email})
     if (user){
-      return user
+      return await this.Payload(user)
     }
     else{
       try{
@@ -31,12 +34,24 @@ export class UserService {
         newUser.email=res.getPayload().email;
         newUser.photoUrl=res.getPayload().picture;
         newUser.isVerify=true
-        return this.register(newUser)
+        const data= await this.register(newUser)
+       return await this.Payload(data)
       }
       catch (err) {
         return err
       }
-
-  }
+    }
  }
+ async  Payload(user:User){
+  const payload = { 
+    id :user.id,
+    fullName:user.fullName,
+    email: user.email, 
+    photoUrl: user.photoUrl,
+    isVerify: user.isVerify
+    };
+     return {
+       access_token: this.jwtService.sign(payload),
+    };
+}
 }
