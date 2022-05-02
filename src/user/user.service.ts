@@ -21,7 +21,7 @@ export class UserService {
   async login(createUserDto: CreateUserDto) {
     const user=await this.userRepository.findOne({ email: createUserDto.email})
     if (user){
-      return "oke"
+      return user
     }
     else{
       try{
@@ -34,13 +34,9 @@ export class UserService {
         return this.register(newUser)
       }
       catch (err) {
-        
+        return err
       }
-      // const user=new User();
-    //   user.fullName=respone.name
-    // user.email=createUserDto.email
-    // user.photoUrl=createUserDto.photoUrl
-      return "ok"
+
   }
  }
 }

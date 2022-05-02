@@ -5,5 +5,5 @@ export declare class UserService {
     private userRepository;
     constructor(userRepository: Repository<User>);
     register(user: User): Promise<User>;
-    login(createUserDto: CreateUserDto): Promise<User | "oke" | "ok">;
+    login(createUserDto: CreateUserDto): Promise<any>;
 }

@@ -30,7 +30,7 @@ let UserService = class UserService {
     async login(createUserDto) {
         const user = await this.userRepository.findOne({ email: createUserDto.email });
         if (user) {
-            return "oke";
+            return user;
         }
         else {
             try {
@@ -43,8 +43,8 @@ let UserService = class UserService {
                 return this.register(newUser);
             }
             catch (err) {
+                return err;
             }
-            return "ok";
         }
     }
 };
