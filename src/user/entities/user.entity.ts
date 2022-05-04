@@ -14,6 +14,9 @@ export class User {
    @Column({nullable: true})
    password: string;
 
+   @Column({nullable: true})
+   key: string;
+   
    @Column()
    photoUrl : string;
 

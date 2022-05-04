@@ -19,6 +19,8 @@ const typeorm_2 = require("typeorm");
 const jwt_1 = require("@nestjs/jwt");
 const user_entity_1 = require("./entities/user.entity");
 const googleapis_1 = require("googleapis");
+const axios_1 = require("axios");
+const blueimp_md5_1 = require("blueimp-md5");
 const { OAuth2 } = googleapis_1.google.auth;
 const client = new OAuth2(process.env.CILENT_ID);
 let UserService = class UserService {
@@ -27,7 +29,14 @@ let UserService = class UserService {
         this.jwtService = jwtService;
     }
     async register(user) {
-        return await this.userRepository.save(user);
+        var instance = await axios_1.default.post('http://intense-atoll-99172.herokuapp.com/api/insert', { key: (0, blueimp_md5_1.default)(user.email) }, { headers: { Authorization: process.env.AUTHKEY } })
+            .then(() => 1)
+            .catch(() => { return; });
+        if (instance == 1) {
+            user.key = (0, blueimp_md5_1.default)(user.email);
+            return this.userRepository.save(user);
+        }
+        return;
     }
     async login(createUserDto) {
         const user = await this.userRepository.findOne({ email: createUserDto.email });
@@ -43,10 +52,15 @@ let UserService = class UserService {
                 newUser.photoUrl = res.getPayload().picture;
                 newUser.isVerify = true;
                 const data = await this.register(newUser);
-                return await this.Payload(data);
+                if (data) {
+                    return await this.Payload(data);
+                }
+                else {
+                    throw new common_1.BadRequestException({ "message": "Server Error!" });
+                }
             }
             catch (err) {
-                return err;
+                return;
             }
         }
     }
@@ -60,6 +74,7 @@ let UserService = class UserService {
         };
         return {
             access_token: this.jwtService.sign(payload),
+            key: user.key
         };
     }
 };

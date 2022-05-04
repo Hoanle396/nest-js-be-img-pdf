@@ -15,6 +15,7 @@ const user_entity_1 = require("./entities/user.entity");
 const jwt_1 = require("@nestjs/jwt");
 const constants_1 = require("./constants");
 const passport_1 = require("@nestjs/passport");
+const jwt_strategy_1 = require("./jwt.strategy");
 let UserModule = class UserModule {
 };
 UserModule = __decorate([
@@ -29,7 +30,7 @@ UserModule = __decorate([
             }),
         ],
         controllers: [user_controller_1.UserController],
-        providers: [user_service_1.UserService]
+        providers: [user_service_1.UserService, jwt_strategy_1.JwtStrategy]
     })
 ], UserModule);
 exports.UserModule = UserModule;

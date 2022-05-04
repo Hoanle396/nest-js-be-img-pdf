@@ -7,8 +7,12 @@ export declare class UserService {
     private jwtService;
     constructor(userRepository: Repository<User>, jwtService: JwtService);
     register(user: User): Promise<User>;
-    login(createUserDto: CreateUserDto): Promise<any>;
+    login(createUserDto: CreateUserDto): Promise<{
+        access_token: string;
+        key: string;
+    }>;
     Payload(user: User): Promise<{
         access_token: string;
+        key: string;
     }>;
 }
