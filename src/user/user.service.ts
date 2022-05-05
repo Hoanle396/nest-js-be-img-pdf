@@ -2,12 +2,10 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import {JwtService} from '@nestjs/jwt';
 import { User } from './entities/user.entity';
 import {google} from 'googleapis'
-import https from 'axios';
-import md5 from 'blueimp-md5';
+import fetch  from 'node-fetch'
 const {OAuth2}= google.auth
 const client = new OAuth2(process.env.CILENT_ID)
 @Injectable()
@@ -15,19 +13,24 @@ export class UserService {
 
   constructor(
      @InjectRepository(User) private userRepository: Repository<User>,
-     private jwtService: JwtService
+     private jwtService: JwtService,
   ){
 
   }
   async register(user: User) {
-    var instance= await https.post('http://intense-atoll-99172.herokuapp.com/api/insert',{key:md5(user.email)},{headers:{Authorization:process.env.AUTHKEY}})
-    .then(() => 1 )
-    .catch(()=>{return})
-    if(instance==1){
-      user.key=md5(user.email)
+    const { createHmac } = await import('crypto');
+    const hash = createHmac('md5', user.email).digest('hex');
+    var instance= await fetch('http://intense-atoll-99172.herokuapp.com/api/insert',
+    {
+     method : 'POST',
+     body : JSON.stringify( { key: hash }),
+     headers : {'Content-Type': 'application/json',Authorization:process.env.AUTHKEY}
+    })
+    const data=await instance.json()
+    if(data.code == 200||data.code ==201){
+      user.key=hash
       return this.userRepository.save(user)
     }
-    return
   }
   async login(createUserDto: CreateUserDto) {
     const user=await this.userRepository.findOne({ email: createUserDto.email})
@@ -51,7 +54,7 @@ export class UserService {
         }
       }
       catch (err) {
-        return 
+        console.log(err)
       }
     }
  }

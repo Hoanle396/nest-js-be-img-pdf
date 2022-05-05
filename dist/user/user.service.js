@@ -19,8 +19,7 @@ const typeorm_2 = require("typeorm");
 const jwt_1 = require("@nestjs/jwt");
 const user_entity_1 = require("./entities/user.entity");
 const googleapis_1 = require("googleapis");
-const axios_1 = require("axios");
-const blueimp_md5_1 = require("blueimp-md5");
+const node_fetch_1 = require("node-fetch");
 const { OAuth2 } = googleapis_1.google.auth;
 const client = new OAuth2(process.env.CILENT_ID);
 let UserService = class UserService {
@@ -29,14 +28,18 @@ let UserService = class UserService {
         this.jwtService = jwtService;
     }
     async register(user) {
-        var instance = await axios_1.default.post('http://intense-atoll-99172.herokuapp.com/api/insert', { key: (0, blueimp_md5_1.default)(user.email) }, { headers: { Authorization: process.env.AUTHKEY } })
-            .then(() => 1)
-            .catch(() => { return; });
-        if (instance == 1) {
-            user.key = (0, blueimp_md5_1.default)(user.email);
+        const { createHmac } = await Promise.resolve().then(() => require('crypto'));
+        const hash = createHmac('md5', user.email).digest('hex');
+        var instance = await (0, node_fetch_1.default)('http://intense-atoll-99172.herokuapp.com/api/insert', {
+            method: 'POST',
+            body: JSON.stringify({ key: hash }),
+            headers: { 'Content-Type': 'application/json', Authorization: process.env.AUTHKEY }
+        });
+        const data = await instance.json();
+        if (data.code == 200 || data.code == 201) {
+            user.key = hash;
             return this.userRepository.save(user);
         }
-        return;
     }
     async login(createUserDto) {
         const user = await this.userRepository.findOne({ email: createUserDto.email });
@@ -60,7 +63,7 @@ let UserService = class UserService {
                 }
             }
             catch (err) {
-                return;
+                console.log(err);
             }
         }
     }
