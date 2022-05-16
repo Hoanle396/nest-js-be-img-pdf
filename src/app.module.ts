@@ -6,6 +6,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { User } from './user/entities/user.entity';
 import { UserModule } from './user/user.module';
+import { FeedbackModule } from './feedback/feedback.module';
+import { Feedback } from './feedback/entities/feedback.entity';
 
 @Module({
   imports: 
@@ -20,10 +22,10 @@ import { UserModule } from './user/user.module';
     username: process.env.PGUSER,
     password: process.env.PGPASSWORD,
     database: process.env.PGDATABASE,
-    entities: [User],
+    entities: [User,Feedback],
     synchronize: true,
   })
-  ,UserModule],
+  ,UserModule, FeedbackModule],
   controllers: [AppController],
   providers: [AppService],
 })
