@@ -12,12 +12,13 @@ const feedback_service_1 = require("./feedback.service");
 const feedback_controller_1 = require("./feedback.controller");
 const typeorm_1 = require("@nestjs/typeorm");
 const feedback_entity_1 = require("./entities/feedback.entity");
+const token_regis_entity_1 = require("./entities/token-regis.entity");
 let FeedbackModule = class FeedbackModule {
 };
 FeedbackModule = __decorate([
     (0, common_1.Module)({
         imports: [typeorm_1.TypeOrmModule.forFeature([
-                feedback_entity_1.Feedback
+                feedback_entity_1.Feedback, token_regis_entity_1.Token
             ])],
         controllers: [feedback_controller_1.FeedbackController],
         providers: [feedback_service_1.FeedbackService]

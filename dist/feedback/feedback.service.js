@@ -17,18 +17,29 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const feedback_entity_1 = require("./entities/feedback.entity");
+const token_regis_entity_1 = require("./entities/token-regis.entity");
 let FeedbackService = class FeedbackService {
-    constructor(feedbackRepository) {
+    constructor(feedbackRepository, tokenRepository) {
         this.feedbackRepository = feedbackRepository;
+        this.tokenRepository = tokenRepository;
     }
     create(createFeedbackDto) {
         return this.feedbackRepository.save(createFeedbackDto);
+    }
+    async insert(token) {
+        return await this.tokenRepository.save(token);
+    }
+    async findAll() {
+        return await this.tokenRepository.createQueryBuilder('token')
+            .select('token.token', 'token').getRawMany();
     }
 };
 FeedbackService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(feedback_entity_1.Feedback)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __param(1, (0, typeorm_1.InjectRepository)(token_regis_entity_1.Token)),
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository])
 ], FeedbackService);
 exports.FeedbackService = FeedbackService;
 //# sourceMappingURL=feedback.service.js.map

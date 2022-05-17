@@ -18,6 +18,7 @@ const feedback_service_1 = require("./feedback.service");
 const create_feedback_dto_1 = require("./dto/create-feedback.dto");
 const jwt_auth_guard_1 = require("../user/jwt-auth.guard");
 const send_feedback_dto_1 = require("./dto/send-feedback.dto");
+const create_token_dto_1 = require("./dto/create-token.dto");
 var FCM = require('fcm-node');
 var fcm = new FCM(process.env.NOTIFICATION_KEY || "AAAAGS3R0wQ:APA91bGjVg8HNywxRMsmras8P1YnIhyAQct04E--zKlz3VNRnUn-eJOfA0PiyBUsHFOwtYqr87ACI7Cf2TS6giFEyARPisy52XN4T-_lz0DU6jVIkibuQ0tNenOn5rs-M-Gx4WmBW0GF");
 let FeedbackController = class FeedbackController {
@@ -28,14 +29,14 @@ let FeedbackController = class FeedbackController {
         return this.feedbackService.create(createFeedbackDto);
     }
     async send(sendFeedbackDto) {
+        var token = await this.feedbackService.findAll();
         var message = {
-            to: "/topics/com.example.pdf",
+            registration_ids: token.map(tokens => tokens.token),
             notification: {
                 title: sendFeedbackDto.title,
                 body: sendFeedbackDto.body
             },
         };
-        console.log(message);
         return await fcm.send(message, function (err, response) {
             if (err) {
                 console.log(err);
@@ -44,6 +45,9 @@ let FeedbackController = class FeedbackController {
                 console.log("Successfully sent with response: ", response);
             }
         });
+    }
+    async insert(token) {
+        return await this.feedbackService.insert(token);
     }
 };
 __decorate([
@@ -61,6 +65,13 @@ __decorate([
     __metadata("design:paramtypes", [send_feedback_dto_1.SendFeedbackDto]),
     __metadata("design:returntype", Promise)
 ], FeedbackController.prototype, "send", null);
+__decorate([
+    (0, common_1.Post)("/insert"),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [create_token_dto_1.CreateTokenDto]),
+    __metadata("design:returntype", Promise)
+], FeedbackController.prototype, "insert", null);
 FeedbackController = __decorate([
     (0, common_1.Controller)('feedback'),
     __metadata("design:paramtypes", [feedback_service_1.FeedbackService])

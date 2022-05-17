@@ -18,16 +18,15 @@ export class FeedbackController {
   }
   @Post("/send")
   async send(@Body() sendFeedbackDto: SendFeedbackDto) {
-    var token = this.feedbackService.findAll()
-    console.log(token);
+    var token = await this.feedbackService.findAll()
     var message = { 
-      to: "/topics/com.example.pdf", 
+      registration_ids: token.map(tokens => tokens.token), 
+      // to:"dKcAsXlCBxQ:APA91bELwTNLOtSBOL5gXO8EElIIOEAVXvzO3i7PdWhDyF8gmlU7wwTfYXH5ARDCJNScvbED6ADOaV6UsjIIhMVjJKjR0bOJsbAQNr5uKyGf7JPxlCtRiSeS3gWdcsxRzJkvbnNg7Xjk",
       notification: {
           title: sendFeedbackDto.title, 
           body: sendFeedbackDto.body
       },
   };
-  console.log(message)
     return await fcm.send(message, function(err, response){
       if (err) {
           console.log(err);

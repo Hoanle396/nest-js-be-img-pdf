@@ -21,7 +21,8 @@ export class FeedbackService {
   }
 
   async findAll() {
-    return await this.tokenRepository.find()
+    return await this.tokenRepository.createQueryBuilder('token')
+    .select('token.token', 'token').getRawMany()
   }
 
   // findOne(id: number) {
