@@ -1,4 +1,4 @@
-import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { AdminService } from './admin.service';
 import loginAdminDto from './dto/login-admin.dto';
@@ -21,5 +21,13 @@ export class AdminController {
     catch (error) {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(error)
     }
+  }
+  @Get('/feedback')
+  async feedback(){
+    return await this.adminService.getFeedback();
+  }
+  @Get('/user')
+  async user(){
+    return await this.adminService.getUser();
   }
 }

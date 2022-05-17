@@ -34,6 +34,12 @@ let AdminController = class AdminController {
             return res.status(common_1.HttpStatus.INTERNAL_SERVER_ERROR).send(error);
         }
     }
+    async feedback() {
+        return await this.adminService.getFeedback();
+    }
+    async user() {
+        return await this.adminService.getUser();
+    }
 };
 __decorate([
     (0, common_1.Post)("/login"),
@@ -43,6 +49,18 @@ __decorate([
     __metadata("design:paramtypes", [login_admin_dto_1.default, Object]),
     __metadata("design:returntype", Promise)
 ], AdminController.prototype, "login", null);
+__decorate([
+    (0, common_1.Get)('/feedback'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "feedback", null);
+__decorate([
+    (0, common_1.Get)('/user'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "user", null);
 AdminController = __decorate([
     (0, common_1.Controller)('admin'),
     __metadata("design:paramtypes", [admin_service_1.AdminService])

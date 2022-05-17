@@ -6,11 +6,13 @@ import { Admin } from './entities/admin.entity';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from 'src/user/constants';
+import { Feedback } from 'src/feedback/entities/feedback.entity';
+import { User } from 'src/user/entities/user.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([
-    Admin
-  ]),
+    Admin,Feedback,User
+    ]),
   PassportModule,
   JwtModule.register({
     secret: jwtConstants.secret,

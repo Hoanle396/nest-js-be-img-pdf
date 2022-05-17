@@ -15,12 +15,14 @@ const admin_entity_1 = require("./entities/admin.entity");
 const passport_1 = require("@nestjs/passport");
 const jwt_1 = require("@nestjs/jwt");
 const constants_1 = require("../user/constants");
+const feedback_entity_1 = require("../feedback/entities/feedback.entity");
+const user_entity_1 = require("../user/entities/user.entity");
 let AdminModule = class AdminModule {
 };
 AdminModule = __decorate([
     (0, common_1.Module)({
         imports: [typeorm_1.TypeOrmModule.forFeature([
-                admin_entity_1.Admin
+                admin_entity_1.Admin, feedback_entity_1.Feedback, user_entity_1.User
             ]),
             passport_1.PassportModule,
             jwt_1.JwtModule.register({

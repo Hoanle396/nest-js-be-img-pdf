@@ -16,11 +16,15 @@ exports.AdminService = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
 const typeorm_1 = require("@nestjs/typeorm");
+const feedback_entity_1 = require("../feedback/entities/feedback.entity");
+const user_entity_1 = require("../user/entities/user.entity");
 const typeorm_2 = require("typeorm");
 const admin_entity_1 = require("./entities/admin.entity");
 let AdminService = class AdminService {
-    constructor(userRepository, jwtService) {
+    constructor(userRepository, feedbackRepository, clientRepository, jwtService) {
         this.userRepository = userRepository;
+        this.feedbackRepository = feedbackRepository;
+        this.clientRepository = clientRepository;
         this.jwtService = jwtService;
     }
     async login(admin) {
@@ -33,11 +37,21 @@ let AdminService = class AdminService {
         const payload = { id: user.id, username: user.username };
         return { token: this.jwtService.sign(payload) };
     }
+    async getFeedback() {
+        return await this.feedbackRepository.find();
+    }
+    async getUser() {
+        return await this.clientRepository.find();
+    }
 };
 AdminService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(admin_entity_1.Admin)),
+    __param(1, (0, typeorm_1.InjectRepository)(feedback_entity_1.Feedback)),
+    __param(2, (0, typeorm_1.InjectRepository)(user_entity_1.User)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository,
+        typeorm_2.Repository,
         jwt_1.JwtService])
 ], AdminService);
 exports.AdminService = AdminService;
