@@ -3,10 +3,11 @@ import { FeedbackService } from './feedback.service';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { JwtAuthGuard } from 'src/user/jwt-auth.guard';
 import { SendFeedbackDto } from './dto/send-feedback.dto';
+import { CreateTokenDto } from './dto/create-token.dto';
 var FCM = require('fcm-node');
 
 
-var fcm = new FCM(process.env.NOTIFICATION_KEY||"AIzaSyA50XDo__a7PEBqS0bXbQQMyiU7rLEM4mQ");
+var fcm = new FCM(process.env.NOTIFICATION_KEY||"AAAAGS3R0wQ:APA91bGjVg8HNywxRMsmras8P1YnIhyAQct04E--zKlz3VNRnUn-eJOfA0PiyBUsHFOwtYqr87ACI7Cf2TS6giFEyARPisy52XN4T-_lz0DU6jVIkibuQ0tNenOn5rs-M-Gx4WmBW0GF");
 @Controller('feedback')
 export class FeedbackController {
   constructor(private readonly feedbackService: FeedbackService) {}
@@ -17,15 +18,16 @@ export class FeedbackController {
   }
   @Post("/send")
   async send(@Body() sendFeedbackDto: SendFeedbackDto) {
-    
+    var token = this.feedbackService.findAll()
+    console.log(token);
     var message = { 
-      to: '/topics/com.example.pdf', 
-      
+      to: "/topics/com.example.pdf", 
       notification: {
           title: sendFeedbackDto.title, 
           body: sendFeedbackDto.body
       },
   };
+  console.log(message)
     return await fcm.send(message, function(err, response){
       if (err) {
           console.log(err);
@@ -33,6 +35,10 @@ export class FeedbackController {
           console.log("Successfully sent with response: ", response);
       }
   });
+  }
+  @Post("/insert")
+  async insert(@Body() token: CreateTokenDto) {
+    return await this.feedbackService.insert(token)
   }
 
   // @Get()

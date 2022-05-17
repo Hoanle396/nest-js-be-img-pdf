@@ -19,7 +19,7 @@ const create_feedback_dto_1 = require("./dto/create-feedback.dto");
 const jwt_auth_guard_1 = require("../user/jwt-auth.guard");
 const send_feedback_dto_1 = require("./dto/send-feedback.dto");
 var FCM = require('fcm-node');
-var fcm = new FCM(process.env.NOTIFICATION_KEY || "AIzaSyA50XDo__a7PEBqS0bXbQQMyiU7rLEM4mQ");
+var fcm = new FCM(process.env.NOTIFICATION_KEY || "AAAAGS3R0wQ:APA91bGjVg8HNywxRMsmras8P1YnIhyAQct04E--zKlz3VNRnUn-eJOfA0PiyBUsHFOwtYqr87ACI7Cf2TS6giFEyARPisy52XN4T-_lz0DU6jVIkibuQ0tNenOn5rs-M-Gx4WmBW0GF");
 let FeedbackController = class FeedbackController {
     constructor(feedbackService) {
         this.feedbackService = feedbackService;
@@ -29,12 +29,13 @@ let FeedbackController = class FeedbackController {
     }
     async send(sendFeedbackDto) {
         var message = {
-            to: '/topics/com.example.pdf',
+            to: "/topics/com.example.pdf",
             notification: {
                 title: sendFeedbackDto.title,
                 body: sendFeedbackDto.body
             },
         };
+        console.log(message);
         return await fcm.send(message, function (err, response) {
             if (err) {
                 console.log(err);

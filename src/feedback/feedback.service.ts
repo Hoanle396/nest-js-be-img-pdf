@@ -2,21 +2,27 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
+import { CreateTokenDto } from './dto/create-token.dto';
 import { Feedback } from './entities/feedback.entity';
+import { Token } from './entities/token-regis.entity';
 
 @Injectable()
 export class FeedbackService {
   constructor(
-    @InjectRepository(Feedback) private feedbackRepository:Repository<Feedback>){
-
-  }
+    @InjectRepository(Feedback) private feedbackRepository:Repository<Feedback>,
+    @InjectRepository(Token) private tokenRepository:Repository<Token>
+    ){}
   create(createFeedbackDto: CreateFeedbackDto) {
      return this.feedbackRepository.save(createFeedbackDto)
   }
 
-  // findAll() {
-  //   return `This action returns all feedback`;
-  // }
+  async insert(token:CreateTokenDto){
+    return await this.tokenRepository.save(token)
+  }
+
+  async findAll() {
+    return await this.tokenRepository.find()
+  }
 
   // findOne(id: number) {
   //   return `This action returns a #${id} feedback`;

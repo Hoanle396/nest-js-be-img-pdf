@@ -10,6 +10,7 @@ import { FeedbackModule } from './feedback/feedback.module';
 import { Feedback } from './feedback/entities/feedback.entity';
 import { AdminModule } from './admin/admin.module';
 import { Admin } from './admin/entities/admin.entity';
+import { Token } from './feedback/entities/token-regis.entity';
 
 @Module({
   imports: 
@@ -24,7 +25,7 @@ import { Admin } from './admin/entities/admin.entity';
     username: process.env.PGUSER,
     password: process.env.PGPASSWORD,
     database: process.env.PGDATABASE,
-    entities: [User,Feedback,Admin],
+    entities: [User,Feedback,Admin,Token],
     synchronize: true,
   })
   ,UserModule, FeedbackModule, AdminModule],
