@@ -8,6 +8,8 @@ import { User } from './user/entities/user.entity';
 import { UserModule } from './user/user.module';
 import { FeedbackModule } from './feedback/feedback.module';
 import { Feedback } from './feedback/entities/feedback.entity';
+import { AdminModule } from './admin/admin.module';
+import { Admin } from './admin/entities/admin.entity';
 
 @Module({
   imports: 
@@ -22,10 +24,10 @@ import { Feedback } from './feedback/entities/feedback.entity';
     username: process.env.PGUSER,
     password: process.env.PGPASSWORD,
     database: process.env.PGDATABASE,
-    entities: [User,Feedback],
+    entities: [User,Feedback,Admin],
     synchronize: true,
   })
-  ,UserModule, FeedbackModule],
+  ,UserModule, FeedbackModule, AdminModule],
   controllers: [AppController],
   providers: [AppService],
 })

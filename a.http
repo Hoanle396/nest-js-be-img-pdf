@@ -1,0 +1,11 @@
+POST https://fcm.googleapis.com/fcm/send
+Content-Type:application/json
+Authorization:'key=AIzaSyA50XDo__a7PEBqS0bXbQQMyiU7rLEM4mQ'
+
+{
+  "to": "/topics/all",
+  "notification":{ "title":"Notification title", "body":"Notification body"},
+  "data": {
+    "message": "This is a Firebase Cloud Messaging Topic Message!",
+   }
+}

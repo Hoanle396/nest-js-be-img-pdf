@@ -2,7 +2,11 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@n
 import { FeedbackService } from './feedback.service';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { JwtAuthGuard } from 'src/user/jwt-auth.guard';
+import { SendFeedbackDto } from './dto/send-feedback.dto';
+var FCM = require('fcm-node');
 
+
+var fcm = new FCM(process.env.NOTIFICATION_KEY||"AIzaSyA50XDo__a7PEBqS0bXbQQMyiU7rLEM4mQ");
 @Controller('feedback')
 export class FeedbackController {
   constructor(private readonly feedbackService: FeedbackService) {}
@@ -10,6 +14,25 @@ export class FeedbackController {
   @Post()
   create(@Body() createFeedbackDto: CreateFeedbackDto) {
     return this.feedbackService.create(createFeedbackDto);
+  }
+  @Post("/send")
+  async send(@Body() sendFeedbackDto: SendFeedbackDto) {
+    
+    var message = { 
+      to: '/topics/com.example.pdf', 
+      
+      notification: {
+          title: sendFeedbackDto.title, 
+          body: sendFeedbackDto.body
+      },
+  };
+    return await fcm.send(message, function(err, response){
+      if (err) {
+          console.log(err);
+      } else {
+          console.log("Successfully sent with response: ", response);
+      }
+  });
   }
 
   // @Get()

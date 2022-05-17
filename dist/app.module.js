@@ -20,6 +20,8 @@ const user_entity_1 = require("./user/entities/user.entity");
 const user_module_1 = require("./user/user.module");
 const feedback_module_1 = require("./feedback/feedback.module");
 const feedback_entity_1 = require("./feedback/entities/feedback.entity");
+const admin_module_1 = require("./admin/admin.module");
+const admin_entity_1 = require("./admin/entities/admin.entity");
 let AppModule = class AppModule {
     constructor(connection) {
         this.connection = connection;
@@ -38,10 +40,10 @@ AppModule = __decorate([
                 username: process.env.PGUSER,
                 password: process.env.PGPASSWORD,
                 database: process.env.PGDATABASE,
-                entities: [user_entity_1.User, feedback_entity_1.Feedback],
+                entities: [user_entity_1.User, feedback_entity_1.Feedback, admin_entity_1.Admin],
                 synchronize: true,
             }),
-            user_module_1.UserModule, feedback_module_1.FeedbackModule],
+            user_module_1.UserModule, feedback_module_1.FeedbackModule, admin_module_1.AdminModule],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
     }),
